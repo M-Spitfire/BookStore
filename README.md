@@ -5,7 +5,7 @@
 ## Build Setup
 
 ``` bash
-#这是跟着生硅谷的java web的视频做的，原版使用的是jsp，我不想学，就改成Vue的了
+#这是跟着尚硅谷的java web的视频做的，原版使用的是jsp，我不想学，就改成Vue的了
 
 #用到了element-ui
 
