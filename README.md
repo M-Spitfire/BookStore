@@ -5,17 +5,11 @@
 ## Build Setup
 
 ``` bash
-# install dependencies
-npm install
+#这是跟着生硅谷的java web的视频做的，原版使用的是jsp，我不想学，就改成Vue的了
 
-# serve with hot reload at localhost:8080
-npm run dev
+#用到了element-ui
 
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
+#我对Vue也只是了解的水平~~~,还不会组件间的通信，所以修改图书信息的那个功能改成了在管理页面完成
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
