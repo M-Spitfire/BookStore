@@ -5,7 +5,7 @@
 			<img class="logo_img" alt="" src="../../assets/img/logo.gif" >
 			<span class="wel_word">结算</span>
 			<div>
-				<span>欢迎<span class="um_span">韩总</span>光临尚硅谷书城</span>
+				<span v-if="loginStatus">欢迎<span class="um_span">{{username}}</span>光临尚硅谷书城</span>
         <router-link to="/order">订单</router-link>
         <router-link to="/">注销</router-link>
         <router-link to="/">返回</router-link>
@@ -37,7 +37,8 @@ components: {},
 data() {
 //这里存放数据
 return {
-
+	username:'',
+	loginStatus:false
 };
 },
 //监听属性 类似于data概念
@@ -54,7 +55,20 @@ created() {
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
-
+	this.$axios({
+		method:'post',
+		url:'/BookStore/userService',
+		data:{
+			'action':'getLoginInfo'
+		}
+	})
+	.then((result) => {
+		// console.log(result.data);
+		this.username = result.data.username;
+		this.loginStatus = result.data.loginStatus;
+	}).catch((err) => {
+		console.log(err);
+	});
 },
 beforeCreate() {}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前

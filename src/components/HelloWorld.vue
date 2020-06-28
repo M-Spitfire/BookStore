@@ -5,8 +5,11 @@
 			<img class="logo_img" alt="" src="../assets/img/logo.gif" >
 			<span class="wel_word">Online Book Store</span>
 			<div>
-				<router-link to="/login">登录</router-link>
-				<router-link to="/register">注册</router-link>
+				<span v-if="loginStatus">欢迎<span class="um_span">{{username}}</span>光临尚硅谷书城</span>
+				<span v-else>
+					<router-link to="/login">登录</router-link>
+					<router-link to="/register">注册</router-link>
+				</span>
 				<router-link to="/cart">购物车</router-link>
 				<router-link to="/manager">管理</router-link>
 			</div>
@@ -103,6 +106,8 @@ return {
 	currentPage:1,
 	totalCount:0,
 	bookList:[],
+	username:'',
+	loginStatus:false
 };
 },
 //监听属性 类似于data概念
@@ -180,6 +185,7 @@ created() {
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
+	//获取一共有几本书，初始化分页器
 	this.$axios({
 		method:'post',
 		url:'/BookStore/manager',
@@ -196,6 +202,7 @@ mounted() {
 		console.log(err);
 	});
 
+	//获取第一页的书的信息
 	this.$axios({
 		method:'post',
 		url:'/BookStore/manager',
@@ -210,6 +217,22 @@ mounted() {
 	.then((result) => {
 		console.log(result);
 		this.bookList = result.data;
+	}).catch((err) => {
+		console.log(err);
+	});
+
+	//获取登录信息
+	this.$axios({
+		method:'post',
+		url:'/BookStore/userService',
+		data:{
+			'action':'getLoginInfo'
+		}
+	})
+	.then((result) => {
+		// console.log(result.data);
+		this.username = result.data.username;
+		this.loginStatus = result.data.loginStatus;
 	}).catch((err) => {
 		console.log(err);
 	});

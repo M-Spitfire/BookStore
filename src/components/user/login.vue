@@ -72,8 +72,8 @@ watch: {},
 //方法集合
 methods: {
 	login(){
-		console.log("username:",this.username);
-		console.log("password:",this.password);
+		// console.log("username:",this.username);
+		// console.log("password:",this.password);
 		let self = this;
 		this.$axios({
 			method: 'post',
@@ -86,7 +86,7 @@ methods: {
 			}
 		})
 		.then((response) => {
-			console.log(response.data);
+			// console.log(response.data);
 			this.login_info = response.data.info;
 			this.$message(response.data.info)
 			if(response.data.state == 4){

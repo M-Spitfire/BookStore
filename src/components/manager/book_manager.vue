@@ -216,6 +216,7 @@ created() {
 	})
 	.then((result) => {
 		this.bookList = result.data;
+		this.totalPages = this.bookList.length;
 		this.bookList.forEach(element => {
 			element.isSet = false;
 		});
@@ -228,19 +229,19 @@ created() {
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
 
-	this.$axios({
-		method:'post',
-		url:'/BookStore/manager',
-		data:{
-			"action":'getNumOfBooks'
-		}
-	})
-	.then((result) => {
-		this.totalPages = result.data.num;
-		console.log(this.totalPages);
-	}).catch((err) => {
-		console.log(err)
-	});
+	// this.$axios({
+	// 	method:'post',
+	// 	url:'/BookStore/manager',
+	// 	data:{
+	// 		"action":'getNumOfBooks'
+	// 	}
+	// })
+	// .then((result) => {
+	// 	this.totalPages = result.data.num;
+	// 	console.log(this.totalPages);
+	// }).catch((err) => {
+	// 	console.log(err)
+	// });
 },
 beforeCreate() {}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前

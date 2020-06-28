@@ -42,8 +42,8 @@
 									<br />
 									<br />
 									<label>验证码:</label>
-									<input class="itxt" type="text" v-model="code" style="width: 120px;" id="code" value="abcde"/>
-									<img alt="" src="../../assets/img/code.jpg" style="float: right; margin-right: 40px">
+									<input class="itxt" type="text" v-model="code" style="width: 100px;" id="code"/>
+									<img @click="updataKaptcha()" :src="kaptchaPath" style="float: right; margin-right: 30px; height:38px; width:110px">
 									<br />
 									<br />
 									<input type="button" value="submit" id="sub_btn" @click="register()"/>
@@ -76,7 +76,8 @@ return {
 	password:"123123",
 	repwd:"123123",
 	email:"123@123.com",
-	code:"abcde"
+	code:"",
+	kaptchaPath:'/BookStore/kaptcha.jpg'
 };
 },
 //监听属性 类似于data概念
@@ -85,6 +86,11 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+	updataKaptcha(){
+		//加一个随机数是为了不让浏览器缓存验证码图片，导致无法更换验证码
+		this.kaptchaPath = '/BookStore/kaptcha.jpg?id=' + Math.random();
+	},
+
 	register(){
 		if(this.password != this.repwd){
 			this.$message("密码不一致");
@@ -111,8 +117,11 @@ methods: {
 			if(result.data.state == 1){
 				this.$router.push("/register_success");
 			}
+			else if(result.data.state == 3){
+				this.$router.go(0);
+			}
 		}).catch((err) => {
-			
+			console.log(err);
 		});
 	}
 },

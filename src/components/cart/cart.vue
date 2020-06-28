@@ -2,13 +2,13 @@
 <template>
 <div>
   <div id="header">
-			<img class="logo_img" alt="" src="static/img/logo.gif" >
+			<img class="logo_img" alt="" src="../../assets/img/logo.gif" >
 			<span class="wel_word">购物车</span>
 			<div>
-				<span>欢迎<span class="um_span">韩总</span>光临尚硅谷书城</span>
+				<span v-if="loginStatus">欢迎<span class="um_span">{{username}}</span>光临尚硅谷书城</span>
         <router-link to="/order">订单</router-link>
-        <router-link to="/">注销</router-link>
         <router-link to="/">首页</router-link>
+				<el-button type="text" @click="logout()">注销</el-button>
 			</div>
 	</div>
 	
@@ -75,7 +75,8 @@ components: {},
 data() {
 //这里存放数据
 return {
-
+	username:'',
+	loginStatus:false
 };
 },
 //监听属性 类似于data概念
@@ -84,7 +85,25 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
-
+	logout(){
+		console.log('logout...');
+		this.$axios({
+			method:'post',
+			url:'/BookStore/userService',
+			data:{
+				'action':'logout'
+			}
+		})
+		.then((result) => {
+			this.login_info = result.data.info;
+			this.$message(result.data.info)
+			if(result.data.state == 6){
+				this.$router.push("/")
+			}
+		}).catch((err) => {
+			console.log(err);
+		});
+	}
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
@@ -92,7 +111,20 @@ created() {
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
-
+	this.$axios({
+		method:'post',
+		url:'/BookStore/userService',
+		data:{
+			'action':'getLoginInfo'
+		}
+	})
+	.then((result) => {
+		// console.log(result.data);
+		this.username = result.data.username;
+		this.loginStatus = result.data.loginStatus;
+	}).catch((err) => {
+		console.log(err);
+	});
 },
 beforeCreate() {}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
