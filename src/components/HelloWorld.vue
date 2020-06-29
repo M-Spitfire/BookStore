@@ -60,7 +60,7 @@
 							<span class="sp2">{{book.stock}}</span>
 						</div>
 						<div class="book_add">
-							<button>加入购物车</button>
+							<button @click="addToCart(book)">加入购物车</button>
 						</div>
 					</div>
 				</span>
@@ -116,6 +116,27 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+	addToCart(book){
+		// console.log(book)
+		// console.log(JSON.stringify(book));
+		this.$axios({
+			method:'post',
+			url:'/BookStore/cartService',
+			data:{
+				'action':'addToCart',
+				'id':book.id,
+				'name':book.name,
+				'count':1,
+				'price':book.price
+			}
+		})
+		.then((result) => {
+			// console.log(result.data);
+		}).catch((err) => {
+			console.log(err);
+		});
+	},
+
 	queryByPrice(){
 		let self = this;
 
@@ -215,7 +236,7 @@ mounted() {
 		}
 	})
 	.then((result) => {
-		console.log(result);
+		// console.log(result);
 		this.bookList = result.data;
 	}).catch((err) => {
 		console.log(err);

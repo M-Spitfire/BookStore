@@ -22,36 +22,25 @@
 				<td>金额</td>
 				<td>操作</td>
 			</tr>		
-			<tr>
-				<td>时间简史</td>
-				<td>2</td>
-				<td>30.00</td>
-				<td>60.00</td>
-				<td><a href="#">删除</a></td>
+			<tr v-for="book in bookList" :key="book.id">
+				<td>{{book.name}}</td>
+				<td>{{book.count}}</td>
+				<td>{{book.price}}</td>
+				<td>{{book.count * book.price}}</td>
+				<td><button @click="deleteItem(book)">删除</button></td>
 			</tr>	
 			
 			<tr>
-				<td>母猪的产后护理</td>
-				<td>1</td>
-				<td>10.00</td>
-				<td>10.00</td>
-				<td><a href="#">删除</a></td>
+				<td colspan="5" v-if="bookList.length == 0">cart is empty!</td>
 			</tr>	
 			
-			<tr>
-				<td>百年孤独</td>
-				<td>1</td>
-				<td>20.00</td>
-				<td>20.00</td>
-				<td><a href="#">删除</a></td>
-			</tr>		
 			
 		</table>
 		
-		<div class="cart_info">
-			<span class="cart_span">购物车中共有<span class="b_count">4</span>件商品</span>
-			<span class="cart_span">总金额<span class="b_price">90.00</span>元</span>
-			<span class="cart_span"><a href="#">清空购物车</a></span>
+		<div class="cart_info" v-if="bookList.length != 0">
+			<span class="cart_span">购物车中共有<span class="b_count">{{numOfBooks}}</span>件商品</span>
+			<span class="cart_span">总金额<span class="b_price">{{totalPrice}}</span>元</span>
+			<span class="cart_span"><button @click="clear()">清空购物车</button></span>
 			<span class="cart_span"><router-link to="/checkout">去结账</router-link></span>
 		</div>
 	
@@ -76,7 +65,10 @@ data() {
 //这里存放数据
 return {
 	username:'',
-	loginStatus:false
+	loginStatus:false,
+	bookList:[],
+	numOfBooks:0,
+	totalPrice:0
 };
 },
 //监听属性 类似于data概念
@@ -85,6 +77,37 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+	deleteItem(book){
+		this.$axios({
+			method:'post',
+			url:'/BookStore/cartService',
+			data:{
+				'action':'deleteItem',
+				'id':book.id
+			}
+		})
+		.then((result) => {
+			this.$router.go(0);
+		}).catch((err) => {
+			console.log(err);
+		});
+	},
+
+	clear(){
+		this.$axios({
+			method:'post',
+			url:'/BookStore/cartService',
+			data:{
+				'action':'clear'
+			}
+		})
+		.then((result) => {
+			this.$router.go(0);
+		}).catch((err) => {
+			console.log(err);
+		});
+	},
+
 	logout(){
 		console.log('logout...');
 		this.$axios({
@@ -122,6 +145,25 @@ mounted() {
 		// console.log(result.data);
 		this.username = result.data.username;
 		this.loginStatus = result.data.loginStatus;
+	}).catch((err) => {
+		console.log(err);
+	});
+
+	this.$axios({
+		method:'post',
+		url:'/BookStore/cartService',
+		data:{
+			'action':'getCart'
+		}
+	})
+	.then((result) => {
+		let cart = result.data;
+		this.numOfBooks = cart.numOfBooks;
+		this.totalPrice = cart.totalPrice;
+		let books = cart.books;
+		for(let index in books){
+			this.bookList.push(books[index]);
+		}
 	}).catch((err) => {
 		console.log(err);
 	});
