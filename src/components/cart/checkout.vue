@@ -7,14 +7,15 @@
 			<div>
 				<span v-if="loginStatus">欢迎<span class="um_span">{{username}}</span>光临尚硅谷书城</span>
         <router-link to="/order">订单</router-link>
-        <router-link to="/">注销</router-link>
         <router-link to="/">返回</router-link>
+				<el-button type="text" @click="logout()">注销</el-button>
+				
 			</div>
 	</div>
 	
 	<div id="main">
 		
-		<h1>你的订单已结算，订单号为2937474382928484747</h1>
+		<h1>你的订单已结算，订单号为{{orderId}}</h1>
 		
 	
 	</div>
@@ -38,7 +39,8 @@ data() {
 //这里存放数据
 return {
 	username:'',
-	loginStatus:false
+	loginStatus:false,
+	orderId:''
 };
 },
 //监听属性 类似于data概念
@@ -47,7 +49,25 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
-
+	logout(){
+		console.log('logout...');
+		this.$axios({
+			method:'post',
+			url:'/BookStore/userService',
+			data:{
+				'action':'logout'
+			}
+		})
+		.then((result) => {
+			this.login_info = result.data.info;
+			this.$message(result.data.info)
+			if(result.data.state == 6){
+				this.$router.push("/")
+			}
+		}).catch((err) => {
+			console.log(err);
+		});
+	}
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
@@ -66,6 +86,20 @@ mounted() {
 		// console.log(result.data);
 		this.username = result.data.username;
 		this.loginStatus = result.data.loginStatus;
+	}).catch((err) => {
+		console.log(err);
+	});
+
+	this.$axios({
+		method:'post',
+		url:'/BookStore/orderService',
+		data:{
+			'action':'createOrder'
+		}
+	})
+	.then((result) => {
+		// console.log(result.data);
+		this.orderId = result.data.orderId;
 	}).catch((err) => {
 		console.log(err);
 	});

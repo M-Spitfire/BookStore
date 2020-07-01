@@ -27,10 +27,10 @@
 				</form>
 			</div>
 			<div style="text-align: center">
-				<span>there are 3 goods in your cart.   </span>
 				<div>
-					added <span style="color: red">time histore</span> into cart
+					<span>   </span>
 				</div>
+				<span>there are 3 goods in your cart.   </span>
 			</div>
 
 			<div>

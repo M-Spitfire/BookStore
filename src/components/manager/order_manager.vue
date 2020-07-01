@@ -20,26 +20,13 @@
 				<td>发货</td>
 				
 			</tr>		
-			<tr>
-				<td>2015.04.23</td>
-				<td>90.00</td>
+			<tr v-for="order in orderList" :key="order.orderId">
+				<td>{{order.createTime | formatDate}}</td>
+				<td>{{order.price}}</td>
 				<td><a href="#">查看详情</a></td>
-				<td><a href="#">点击发货</a></td>
+				<td>{{order.status}}</td>
 			</tr>	
-			
-			<tr>
-				<td>2015.04.20</td>
-				<td>20.00</td>
-				<td><a href="#">查看详情</a></td>
-				<td>已发货</td>
-			</tr>	
-			
-			<tr>
-				<td>2014.01.23</td>
-				<td>190.00</td>
-				<td><a href="#">查看详情</a></td>
-				<td>等待收货</td>
-			</tr>		
+				
 		</table>
 	</div>
 	
@@ -54,6 +41,7 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
+import {formatDate} from '../../common/date.js';
 
 export default {
 //import引入的组件需要注入到对象中才能使用
@@ -61,7 +49,7 @@ components: {},
 data() {
 //这里存放数据
 return {
-
+	orderList:[]
 };
 },
 //监听属性 类似于data概念
@@ -78,8 +66,33 @@ created() {
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
-
+	this.$axios({
+		method:'post',
+		url:'/BookStore/orderService',
+		data:{
+			'action':'showAllOrders'
+		}
+	})
+	.then((result) => {
+		// console.log(result.data);
+		let items = result.data;
+		for(let index in items){
+			this.orderList.push(items[index]);
+		}
+		// console.log('orderList:')
+		// console.log(this.orderList);
+	}).catch((err) => {
+		console.log(err);
+	});
 },
+
+filters: {
+	formatDate(time) {
+		var date = new Date(time);
+		return formatDate(date, 'yyyy-MM-dd hh:mm');
+	}
+},
+
 beforeCreate() {}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
 beforeUpdate() {}, //生命周期 - 更新之前

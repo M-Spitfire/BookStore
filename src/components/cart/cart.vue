@@ -41,7 +41,7 @@
 			<span class="cart_span">购物车中共有<span class="b_count">{{numOfBooks}}</span>件商品</span>
 			<span class="cart_span">总金额<span class="b_price">{{totalPrice}}</span>元</span>
 			<span class="cart_span"><button @click="clear()">清空购物车</button></span>
-			<span class="cart_span"><router-link to="/checkout">去结账</router-link></span>
+			<span class="cart_span"><button @click="checkout()">去结账</button></span>
 		</div>
 	
 	</div>
@@ -77,6 +77,16 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+	checkout(){
+		if(!this.loginStatus){
+			this.$message({
+				message:'未登录状态下无法生成订单',
+				type:'warning'
+			})
+			return;
+		}
+		this.$router.push('/checkout');
+	},
 	deleteItem(book){
 		this.$axios({
 			method:'post',
